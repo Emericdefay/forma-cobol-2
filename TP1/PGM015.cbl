@@ -3,7 +3,7 @@
       *
       * Original author: DEFAY E.           
       *
-      * Purpose : 
+      * Purpose : Structure reports of factories of an enterprise
       *
       * Using :
       *    - Copybooks PGM015FC & PGM015FS                    
