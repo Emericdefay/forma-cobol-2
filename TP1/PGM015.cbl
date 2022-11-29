@@ -3,16 +3,22 @@
       *
       * Original author: DEFAY E.           
       *
-      * Purpose : Structure reports of factories of an enterprise
+      * Purpose : 
+      *    Structure reports of factories of an enterprise
       *
       * Using :
       *    - Copybooks PGM015FC & PGM015FS                    
-      *    - File (example) FILE015              
+      *    - File (example) FILE015       
+      *       
+      * Returning :
+      *    - FILE015A : Report of factories      
+      *    - FILE015B : Errors reported from FILE015      
       *
       * Maintenance Log                                              
       * Date      Author   Maintenance Requirement               
       * --------- -------- --------------------------------------- 
-      * 28/11/22  IBMUSER  Create for practice  
+      * 28/11/22  IBMUSER  Created for practice  
+      * 29/11/22  IBMUSER  Documentation 
       *                                                               
       *****************************************************************
        IDENTIFICATION DIVISION.
@@ -168,7 +174,7 @@
            02 COL-1  PIC X(20) VALUE 'ERROR Number'.
            02 COL-2  PIC X(20) VALUE 'ERROR Line'.
            02 COL-3  PIC X(32) VALUE 'ERROR Type'.
-           02 FILLER PIC X(8).
+           02 FILLER PIC X(08).
       / INITIALS VALUES USED FOR MAX FINDING
        01 INDEX-FACTORY        PIC 9(05) VALUE 1.
        01 INDEX-MAX-FACTORY    PIC 9(05) VALUE 1.
@@ -241,12 +247,15 @@
            MOVE WS-CURRENT-MONTH TO PRD-MH
            .
 
-      *****************************************************************
-      *  Those routines should manage file opening (if any)
        001-IOPEN.
+      *****************************************************************
+      *  This routine open input file(s) (if any)
            OPEN INPUT  FILEIN
            .
+
        002-OOPEN.
+      *****************************************************************
+      *  This routine open output file(s) (if any)
            OPEN OUTPUT FILEOUT1,
                        FILEOUT2
            .
@@ -256,6 +265,7 @@
       *  This routine should manage file reading
            READ FILEIN
            .
+
       *****************************************************************
 
       *****************************************************************
@@ -326,7 +336,6 @@
            END-EVALUATE
            .
 
-
        400-CONVERT-TO-NUMBERS.
       *****************************************************************
       *  This routine change types of raw input to clean data
@@ -375,7 +384,6 @@
                   MOVE INDEX-FACTORY TO INDEX-MAX-FACTORY
                END-IF
            END-PERFORM
-
       * MAX WORKBH FROM THIS FACTORY
            PERFORM 
                VARYING INDEX-WORKBH FROM 1 BY 1
@@ -441,7 +449,7 @@
                UNTIL (IDX-FACT > NUMBER-MAX-FACTORY)
                    PERFORM 826-REPORT-FACTORY
            END-PERFORM
-            .
+           .
 
        826-REPORT-FACTORY.
       *****************************************************************
@@ -477,6 +485,8 @@
            WRITE ENTREPRISE FROM BEST-FACTORY 
            WRITE ENTREPRISE FROM BEST-WORKBH 
            .
+
+      *****************************************************************
 
       *****************************************************************
       *  Routine 2 : Close files before closing the program.
