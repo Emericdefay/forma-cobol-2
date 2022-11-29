@@ -57,9 +57,22 @@
       *****************************************************************
        WORKING-STORAGE SECTION.
       / CONSTANTES
-      *01 FILLER.
-      *    02 NUMBER-MAX-FACTORY PIC 99 VALUE 03.
-      *    02 NUMBER-MAX-WORKBH  PIC 99 VALUE 05.
+       01 FILLER.
+          02 NUMBER-MAX-FACTORY PIC 9 VALUE 3.
+          02 NUMBER-MAX-WORKBH  PIC 9 VALUE 5.
+          02 CST-ENTERPRISE     PIC X(17) VALUE 'DEFAY K0rp.'.
+      / TIME
+       01  WS-CURRENT-DATE-FIELDS.
+           05  WS-CURRENT-DATE.
+               10  WS-CURRENT-YEAR    PIC  9(04).
+               10  WS-CURRENT-MONTH   PIC  9(02).
+               10  WS-CURRENT-DAY     PIC  9(02).
+           05  WS-CURRENT-TIME.
+               10  WS-CURRENT-HOUR    PIC  9(02).
+               10  WS-CURRENT-MINUTE  PIC  9(02).
+               10  WS-CURRENT-SECOND  PIC  9(02).
+               10  WS-CURRENT-MS      PIC  9(02).
+           05  WS-DIFF-FROM-GMT       PIC S9(04).
       / FILE CONVERSION
        01 LINE-VERIFIED.
            02 LINE-FACT-LETTER  PIC X.
@@ -74,13 +87,20 @@
       / HEADERS
        01 FILLER.
            02 LINE1.
-               03 FILLER PIC X(17) VALUE 'ENTREPRISE : TACA'.
-               03 FILLER PIC X(42) VALUE SPACES.
-               03 FILLER PIC X(13) VALUE 'Le 29/11/2022'.
-               03 FILLER PIC X(08) VALUE SPACES.
+               03 FILLER    PIC X(13) VALUE 'ENTREPRISE : '.
+               03 HDR-ETPRS PIC X(17) VALUE SPACES.
+               03 FILLER    PIC X(29) VALUE SPACES.
+               03 FILLER    PIC X(03) VALUE 'Le '.
+               03 HDR-DAY   PIC X(02) VALUE '00'.
+               03 FILLER    PIC X(01) VALUE '/'.
+               03 HDR-MONTH PIC X(02) VALUE '00'.
+               03 FILLER    PIC X(01) VALUE '/'.
+               03 HDR-YEAR  PIC X(04) VALUE '0000'.
+               03 FILLER    PIC X(08) VALUE SPACES.
            02 LINE2.
                03 FILLER PIC X(23) VALUE SPACES.
-               03 FILLER PIC X(26) VALUE 'PRODUCTION DU MOIS DE : 12'.
+               03 FILLER PIC X(24) VALUE 'PRODUCTION DU MOIS DE : '.
+               03 PRD-MH PIC X(02) VALUE '00'.
                03 FILLER PIC X(23) VALUE SPACES.
                03 FILLER PIC X(08) VALUE SPACES.
            02 LEGEND.
@@ -95,18 +115,7 @@
       / REPORT STRUCTURE     
        01 WS-ENTERPRISE.
            02 FILLER     OCCURS 3.
-      *       1 TO 9 DEPENDING ON NUMBER-MAX-FACTORY INDEXED BY NF.
-               03 FILLER OCCURS 5.
-      *           1 TO 9 DEPENDING ON NUMBER-MAX-WORKBH INDEXED BY WH.
-                   04 WORKBH-DISPLAY.
-                       05 FILLER PIC X(17) VALUE SPACES.
-                       05 FILLER PIC X(13) VALUE 'Nb Atelier : '.
-                       05 IDX-WH PIC 9(02) VALUE 0.
-                       05 FILLER PIC X(08) VALUE SPACES.
-                       05 TOTAL-WORKBH PIC 9(05) VALUE 0.
-                       05 FILLER PIC X(15) VALUE SPACES.
-                       05 BREAK-WORKBH PIC 9(05) VALUE 0.
-                       05 FILLER PIC X(15) VALUE SPACES.
+      *      1 TO 9 DEPENDING ON NUMBER-MAX-FACTORY INDEXED BY NF.
                03 TOTAL-DISPLAY.
                    04 FILLER PIC X(26) VALUE SPACES.
                    04 FILLER PIC X(13) VALUE 'TOTAL USINE :'.
@@ -124,6 +133,17 @@
                    04 FILLER PIC X(07) VALUE 'DEFAUTS'.
                    04 FILLER PIC X(06) VALUE SPACES.
                    04 FILLER PIC X(08) VALUE SPACES.
+               03 FILLER OCCURS 5.
+      *          1 TO 9 DEPENDING ON NUMBER-MAX-WORKBH INDEXED BY WH.
+                   04 WORKBH-DISPLAY.
+                       05 FILLER PIC X(17) VALUE SPACES.
+                       05 FILLER PIC X(13) VALUE 'Nb Atelier : '.
+                       05 IDX-WH PIC 9(02) VALUE 0.
+                       05 FILLER PIC X(08) VALUE SPACES.
+                       05 TOTAL-WORKBH PIC 9(05) VALUE 0.
+                       05 FILLER PIC X(15) VALUE SPACES.
+                       05 BREAK-WORKBH PIC 9(05) VALUE 0.
+                       05 FILLER PIC X(15) VALUE SPACES.
        01 ENTERPRISE-DISPLAY.
            02 FILLER PIC X(11) VALUE SPACES.
            02 FILLER PIC X(18) VALUE 'TOTAL ENTREPRISE :'.
@@ -209,7 +229,16 @@
        000-PARAM.
       *****************************************************************
       *  This routine should setup params (if any)
-           CONTINUE 
+      / Initialize ENTERPRISE NAME
+           MOVE CST-ENTERPRISE   TO HDR-ETPRS
+      / Initialize DATE
+           MOVE FUNCTION CURRENT-DATE TO WS-CURRENT-DATE-FIELDS
+      /    HEADER DATE
+           MOVE WS-CURRENT-DAY   TO HDR-DAY
+           MOVE WS-CURRENT-MONTH TO HDR-MONTH
+           MOVE WS-CURRENT-YEAR  TO HDR-YEAR 
+      /    HEADER PROD
+           MOVE WS-CURRENT-MONTH TO PRD-MH
            .
 
       *****************************************************************
