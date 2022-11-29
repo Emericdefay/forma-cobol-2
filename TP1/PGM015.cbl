@@ -112,7 +112,7 @@
                03 FILLER PIC X(08) VALUE SPACES.
            02 NEWLINE.
                03 FILLER PIC X(80) VALUE SPACES.
-      / REPORT STRUCTURE     
+      / REPORT STRUCTURE
        01 WS-ENTERPRISE.
            02 FILLER     OCCURS 3.
       *      1 TO 9 DEPENDING ON NUMBER-MAX-FACTORY INDEXED BY NF.
@@ -259,7 +259,7 @@
       *****************************************************************
 
       *****************************************************************
-      *  Routine 1 : Read, compare 2 files and write in 3 other files.
+      *  Routine 1 : Main section
       *****************************************************************
        100-FILES.
       *****************************************************************
